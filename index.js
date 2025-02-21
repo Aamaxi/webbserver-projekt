@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+const mysql = require("mysql2");
 
 const conn = mysql.createConnection({
   host: DB_HOST,
@@ -7,12 +8,17 @@ const conn = mysql.createConnection({
   user: "avnadmin",
   database: "defaultdb",
   port: DB_PORT, 
-  ssl: {}
 });
 
 
 app.get("/", function(request, response){
-  response.send("Hello, world!");
+  conn.query("SELECT * FROM your_table_name", function (err, results, fields) {
+    if (err) {
+      response.status(500).send(err.toString());
+    } else {
+      response.json(results);
+    }
+  });
 
 });
 
